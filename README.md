@@ -1,2 +1,0 @@
-# Pomodoro
-Pomodoro Productivity Application
