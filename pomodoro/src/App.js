@@ -1,6 +1,6 @@
-import tomato from './t.gif';
 import {useEffect, useState} from 'react';
 import './App.scss';
+import tomato from './tomato.gif';
 
 function Pomodoro() {
   //customize number of minutes to something else. input field
@@ -12,9 +12,11 @@ function Pomodoro() {
   //TODO: add sound effects and message when the timer is over
   //TODO: add music options in the background for studying from the spotify API?
 
+  //this
   useEffect(() => {
     let countdown;
 
+    //run if paused is false
     if (!paused) {
       countdown = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
@@ -25,11 +27,12 @@ function Pomodoro() {
       clearInterval(countdown);
     };
   }, [paused]);
+  //returned cleanup clears the interval when the component unmounts. useEffect with a cleanup function returned = componentWillUnmount. whenever the paused state changes, the effect is triggered--tied to toggle play
 
 
 function togglePlay(){
+  //always use the setter function to update the state value. trigger rerender of the component with the updated state value.
   setPaused(!paused)
-  console.log(paused)
 }
 
 
@@ -45,8 +48,8 @@ function resetTimer(){
 
 function convertMsToMinutesAndSeconds(ms) {
   const minutes = Math.floor(ms / 60); 
-  const seconds = Math.floor((ms % 60)); 
-  return minutes.toString() + ":" + ((seconds == 0) ? "00" : seconds.toString())
+  const seconds = Math.floor(ms % 60); 
+  return minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0')
 }
 
   return (
