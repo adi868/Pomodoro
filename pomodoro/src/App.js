@@ -3,8 +3,8 @@ import './App.scss';
 import tomato from './tomato.gif';
 
 function Pomodoro() {
+  let [timer, setTimer] = useState(1500) //25 minutes in seconds
   //customize number of minutes to something else. input field
-  const [timer, setTimer] = useState(1500) //25 minutes in seconds
   let [paused, setPaused] = useState(true);
   const [isTimerUp, setIsTimerUp] = useState(false);
 
@@ -41,10 +41,12 @@ function resetTimer(){
   setPaused(true)
 }
 
-
-  if(timer === 0){
-    setIsTimerUp(true)
+useEffect(() => {
+  if (timer === 0) {
+    setIsTimerUp(true);
+    setPaused(true)
   }
+}, [timer]);
 
 function convertMsToMinutesAndSeconds(ms) {
   const minutes = Math.floor(ms / 60); 
