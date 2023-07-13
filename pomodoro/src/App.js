@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import './App.scss';
 import tomato from './tomato.gif';
+import tone from './tone.mp3';
 
 function Pomodoro() {
   let [timer, setTimer] = useState(1500) //25 minutes in seconds
@@ -39,14 +40,23 @@ function togglePlay(){
 function resetTimer(){
   setTimer(1500);
   setPaused(true)
+  setIsTimerUp(false)
 }
 
 useEffect(() => {
   if (timer === 0) {
     setIsTimerUp(true);
-    setPaused(true)
+    setPaused(true);
+    playSound();
   }
 }, [timer]);
+//timer as a dependency, event only triggered when the timer value changes. will update isTimerUp when the timer reaches zero
+
+const playSound = () => {
+  //html audio element api
+  const audio = new Audio(tone);
+  audio.play();
+}
 
 function convertMsToMinutesAndSeconds(ms) {
   const minutes = Math.floor(ms / 60); 
