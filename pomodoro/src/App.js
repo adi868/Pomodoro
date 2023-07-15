@@ -94,52 +94,53 @@ function Pomodoro() {
   return (
     <div className="App">
       <div className="pomodoro">
-        <div className="pomodoro_container">
-        <h1 className="pomodoro_heading">Pomodoro</h1>
-        <div className="pomodoro_inner">
-        <img width="200" src={tomato} className="tomato" alt="tomato" />
-          <p>Session</p>
-          <p>{convertMsToMinutesAndSeconds(timer)}</p>
-          <button onClick={togglePlay}>
-            {paused ? "Start Timer" : "Stop Timer"}
-          </button>
-          <button onClick={resetTimer}>Reset Timer</button>
-          {isTimerUp && <div className="banner">Timer is up!</div>}
-          <section className="timer-section">
-            <div className="session">
-              <label htmlFor="sessionTime">Session Length (min)</label>
-              <input
-                name="sessionTime"
-                id="sessionTime"
-                type="number"
-                min="0"
-                max="60"
-                step="5"
-                value={sessionTime}
-                onChange={handleSession}
-              />
+        <div className="pomodoro__container">
+          <div className="pomodoro__inner">
+          {isTimerUp && <div className="pomodoro__banner">Timer is up!</div>}
+            <img width="200" src={tomato} className="pomodoro__tomato" alt="tomato" />
+            <span className="pomodoro__type">Session</span>
+            <span className="pomodoro__timer">{convertMsToMinutesAndSeconds(timer)}</span>
+            <div className="pomodoro__buttons">
+              <button className="pomodoro__button pomodoro__buttons--start" onClick={togglePlay}>
+                {paused ? "Start Timer" : "Stop Timer"}
+              </button>
+              <button className="pomodoro__button pomodoro__buttons--reset" onClick={resetTimer}>Reset Timer</button>
             </div>
-            <div className="break">
-              <label htmlFor="breakTime">Break Length (min)</label>
-              <input
-                value={breakTime}
-                step="1"
-                max="30"
-                min="0"
-                type="number"
-                name="breakTime"
-                id="breakTime"
-                onChange={handleBreak}
-              />
+            <div className="pomodoro__timers">
+              <div className="pomodoro__timers__timer pomodoro__timers--session">
+                <label htmlFor="sessionTime">Session (min)</label>
+                <input
+                  name="sessionTime"
+                  id="sessionTime"
+                  type="number"
+                  min="0"
+                  max="60"
+                  step="5"
+                  value={sessionTime}
+                  onChange={handleSession}
+                />
+              </div>
+              <div className="pomodoro__timers__timer pomodoro__timers--break">
+                <label htmlFor="breakTime">Break (min)</label>
+                <input
+                  value={breakTime}
+                  step="1"
+                  max="30"
+                  min="0"
+                  type="number"
+                  name="breakTime"
+                  id="breakTime"
+                  onChange={handleBreak}
+                />
+              </div>
             </div>
-          </section>
-          <p>
-            Each Pomodoro can run for a specified number of rounds. The default
-            is for the Pomodoro to run 4 times.
-          </p>
-          <p>Number of rounds: 4</p>
-          <span>Total Time: {totalTime * 4}</span>
-        </div>
+            <div className="pomodoro__rounds">
+              <span>Each Pomodoro can run for a specified number of rounds. The
+              default is for the Pomodoro to run 4 times.</span>
+            <p>Number of rounds: 4</p>
+            <span>Total Time: {totalTime * 4}</span>
+            </div>
+          </div>
         </div>
       </div>
       <footer></footer>

@@ -53,37 +53,125 @@ body {
   height: 100%;
   width: 100%;
   margin: 0 auto;
+  background-image: url('./pomodoro.png');
 
-  .pomodoro_container {
-    max-width: 60%;
+  &__container {
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    background: rgba(0, 0, 0, 0.7);
   }
 
-  .pomodoro_inner {
+  &__inner {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     background: #fff;
-    padding: 30px
-  }
-}
-
-.timer-section {
-  display: flex;
-  justify-content: center;
-
-  .session {
-    display: flex;
-    flex-direction: column;
+    padding: 30px 0;
+    max-width: 400px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border-radius: 10px;
   }
 
-  .break {
+  &__banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    padding: 20px 0;
+    text-transform: uppercase;
+    font-size: 18px;
+  }
+
+  &__type {
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+
+  &__timer {
+    font-weight: bold;
+    font-size: 50px;
+    margin-bottom: 40px;
+  }
+
+  &__tomato {
+    margin-right: -20px;
+  }
+
+  &__buttons {
     display: flex;
-    flex-direction: column;
+    width: 100%;
+
+    .pomodoro__button {
+      width: 50%;
+      border: none;
+      padding: 20px;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: white;
+    }
+
+    &--start {
+      border-right: 1px solid white !important;
+      background-color: lightgrey;
+
+      &:hover {
+        background-color: #5B39A8;
+      }
+    }
+
+    &--reset {
+      background-color: rgb(202, 201, 201);
+
+      &:hover {
+        background-color: #f35228;
+      }
+    }
+  }
+
+  &__timers {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+
+    label {
+      font-size: 14px;
+      text-align: center;
+    }
+
+    input {
+      padding: 10px;
+      border: none;
+      text-align: center;
+      font-size: 25px;
+
+      &:focus-visible {
+        border: none;
+        outline: none;
+      }
+    }
+
+    &__timer {
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+    }
+
+    &--session {}
+
+    &--break {}
+  }
+
+  &__rounds {
+    padding: 30px 15px;
+    font-size: 13px;
   }
 }
