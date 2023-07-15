@@ -1,7 +1,3 @@
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -32,7 +28,62 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+html,
+body {
+  height: 100%;
+
+  #root {
+    height: 100%;
+  }
+}
+
+.App {
+  // background: #f5cfcf;
+  height: 100%;
+}
+
+.pomodoro {
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+
+  .pomodoro_container {
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .pomodoro_inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #fff;
+    padding: 30px
+  }
+}
+
+.timer-section {
+  display: flex;
+  justify-content: center;
+
+  .session {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .break {
+    display: flex;
+    flex-direction: column;
   }
 }
