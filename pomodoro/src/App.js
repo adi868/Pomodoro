@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import "./App.scss";
 import tomato from "./tomato.gif";
 import tone from "./tone.mp3";
+import start from "./start.mp3";
 
 function Pomodoro() {
   const [sessionTime, setSessionTime] = useState(25); //set default session time
   const [breakTime, setBreakTime] = useState(5); //set default break time
+  const [roundsNum, setRoundsNum] = useState(4);
+  const [checked, setChecked] = useState(false);
   let [timer, setTimer] = useState(sessionTime * 60); // Convert session time to milliseconds, which will later be converted back to min & sec
   let [paused, setPaused] = useState(true);
   const [isTimerUp, setIsTimerUp] = useState(false);
@@ -26,6 +29,7 @@ function Pomodoro() {
       countdown = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
+      playSound(start);
     }
 
     return () => {
@@ -49,7 +53,7 @@ function Pomodoro() {
     if (timer === 0) {
       setIsTimerUp(true);
       setPaused(true);
-      playSound();
+      playSound(tone);
     }
   }, [timer]);
   //timer as a dependency, event only triggered when the timer value changes. will update isTimerUp when the timer reaches zero
@@ -63,9 +67,9 @@ function Pomodoro() {
       seconds.toString().padStart(2, "0")
     );
   }
-  const playSound = () => {
+  const playSound = (mp3) => {
     //html audio element api
-    const audio = new Audio(tone);
+    const audio = new Audio(mp3);
     audio.play();
   };
 
@@ -91,20 +95,41 @@ function Pomodoro() {
     }
   };
 
+  function handleChange(e) {
+    setChecked(e.target.checked);
+  }
+
+  const handleRounds = (e) => {};
+
   return (
     <div className="App">
       <div className="pomodoro">
         <div className="pomodoro__container">
           <div className="pomodoro__inner">
-          {isTimerUp && <div className="pomodoro__banner">Timer is up!</div>}
-            <img width="200" src={tomato} className="pomodoro__tomato" alt="tomato" />
+            {isTimerUp && <div className="pomodoro__banner">Timer is up!</div>}
+            <img
+              width="200"
+              src={tomato}
+              className="pomodoro__tomato"
+              alt="tomato"
+            />
             <span className="pomodoro__type">Session</span>
-            <span className="pomodoro__timer">{convertMsToMinutesAndSeconds(timer)}</span>
+            <span className="pomodoro__timer">
+              {convertMsToMinutesAndSeconds(timer)}
+            </span>
             <div className="pomodoro__buttons">
-              <button className="pomodoro__button pomodoro__buttons--start" onClick={togglePlay}>
+              <button
+                className="pomodoro__button pomodoro__buttons--start"
+                onClick={togglePlay}
+              >
                 {paused ? "Start Timer" : "Stop Timer"}
               </button>
-              <button className="pomodoro__button pomodoro__buttons--reset" onClick={resetTimer}>Reset Timer</button>
+              <button
+                className="pomodoro__button pomodoro__buttons--reset"
+                onClick={resetTimer}
+              >
+                Reset Timer
+              </button>
             </div>
             <div className="pomodoro__timers">
               <div className="pomodoro__timers__timer pomodoro__timers--session">
@@ -135,10 +160,39 @@ function Pomodoro() {
               </div>
             </div>
             <div className="pomodoro__rounds">
-              <span>Each Pomodoro can run for a specified number of rounds. The
-              default is for the Pomodoro to run 4 times.</span>
-            <p>Number of rounds: 4</p>
-            <span>Total Time: {totalTime * 4}</span>
+              <span className="pomodoro__info">
+                The default is for the <a target="_blank" aria-label="Pomodoro - link opens in a new tab" href="https://en.m.wikipedia.org/wiki/Pomodoro_Technique" rel="noreferrer">Pomodoro</a> to run the session 4 times. Each round is separated
+                by the defined break time. After the 4th round, there is a longer, 20 minute
+                break. You can customize the number of rounds to be more or less than the default.
+              </span>
+              <div className="pomodoro__rounds__change">
+                <label htmlFor="toggleRounds">Change # of rounds</label>
+                <input
+                  type="checkbox"
+                  name="toggleRounds"
+                  id="toggleRounds"
+                  onChange={handleChange}
+                />
+              </div>
+              {checked && (
+                <div className="pomodoro__rounds--toggle">
+                  <label htmlFor="rounds">Number of rounds</label>
+                  <input
+                    value={roundsNum}
+                    type="number"
+                    step="1"
+                    min="1"
+                    max="30"
+                    name="rounds"
+                    id="rounds"
+                    onChange={handleRounds}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="pomodoro__total">
+            {/* convert to hours and minutes */}
+              <span>Total Time: {totalTime * 4}</span>
             </div>
           </div>
         </div>
