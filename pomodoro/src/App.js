@@ -99,7 +99,9 @@ function Pomodoro() {
     setChecked(e.target.checked);
   }
 
-  const handleRounds = (e) => {};
+  const handleRounds = (e) => {
+    setRoundsNum(e.target.value)
+  };
 
   return (
     <div className="App">
@@ -182,7 +184,7 @@ function Pomodoro() {
                     type="number"
                     step="1"
                     min="1"
-                    max="30"
+                    max="10"
                     name="rounds"
                     id="rounds"
                     onChange={handleRounds}
@@ -191,8 +193,8 @@ function Pomodoro() {
               )}
             </div>
             <div className="pomodoro__total">
-            {/* convert to hours and minutes */}
-              <span>Total Time: {totalTime * 4}</span>
+            {/* convert to hours and minutes, value does not change */}
+              <span>Total Time: {convertMsToMinutesAndSeconds(timer)}</span>
             </div>
           </div>
         </div>
