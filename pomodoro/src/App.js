@@ -13,6 +13,7 @@ function Pomodoro() {
   let [paused, setPaused] = useState(true);
   const [isTimerUp, setIsTimerUp] = useState(false);
   const [totalTime, setTotalTime] = useState(30);
+  //add which set it is on
   //for session input fields
 
   //TODO: add music options in the background for studying from the spotify API?
