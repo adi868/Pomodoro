@@ -3,6 +3,7 @@ import "./App.scss";
 import tomato from "./tomato.gif";
 import tone from "./tone.mp3";
 import start from "./start.mp3";
+import endBreak from "./endBreak.mp3";
 
 function Pomodoro() {
   const [sessionTime, setSessionTime] = useState(25); //set default session time
@@ -13,6 +14,9 @@ function Pomodoro() {
   let [paused, setPaused] = useState(true);
   const [isTimerUp, setIsTimerUp] = useState(false);
   const [totalTime, setTotalTime] = useState(30);
+  const [isSession, setIsSession]= useState(true);
+
+  //is session, isBreak
   //add which set it is on
   //for session input fields
 
@@ -46,16 +50,31 @@ function Pomodoro() {
     setTimer(1500);
     setPaused(true);
     setIsTimerUp(false);
+    setSessionTime(25)
+    setIsSession(true)
   }
 
   useEffect(() => {
     if (timer === 0) {
       setIsTimerUp(true);
-      setPaused(true);
-      playSound(tone);
-    }
+      setIsSession(prevIsSession => !prevIsSession)
+      if(isSession){
+        playSound(tone);
+      } else{
+        playSound(endBreak)
+      }
+    } 
   }, [timer]);
   //timer as a dependency, event only triggered when the timer value changes. will update isTimerUp when the timer reaches zero
+
+  useEffect(() =>{
+      if(!isSession){
+        setTimer(breakTime * 60)
+      } else{
+        setTimer(sessionTime * 60)
+      }
+  }, [isSession, breakTime, sessionTime])
+
 
   function convertMsToMinutesAndSeconds(ms) {
     const minutes = Math.floor(ms / 60);
@@ -77,7 +96,6 @@ function Pomodoro() {
     if (!isNaN(inputValue)) {
       setSessionTime(inputValue);
       setTimer(inputValue * 60);  //turn into minutes
-      setTotalTime(breakTime + sessionTime);
     }
   };
 
@@ -86,8 +104,6 @@ function Pomodoro() {
     const inputValue = parseInt(e.target.value);
     if (!isNaN(inputValue)) {
       setBreakTime(inputValue);
-      setTotalTime(breakTime + sessionTime);
-      //setTimer(inputValue)
     }
   };
 
@@ -111,7 +127,7 @@ function Pomodoro() {
               className="pomodoro__tomato"
               alt="tomato"
             />
-            <span className="pomodoro__type">Session</span>
+            <span className="pomodoro__type">{isSession ? 'Session' : 'Break'}</span>
             <span className="pomodoro__timer">
               {convertMsToMinutesAndSeconds(timer)}
             </span>
