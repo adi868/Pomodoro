@@ -23,9 +23,7 @@ function Pomodoro() {
 
   //this
   useEffect(() => {
-    let countdown;
-
-    //run if paused is false
+    let countdown;  //run if paused is false
     if (!paused) {
       countdown = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
@@ -69,19 +67,16 @@ function Pomodoro() {
     );
   }
   const playSound = (mp3) => {
-    //html audio element api
-    const audio = new Audio(mp3);
+    const audio = new Audio(mp3);  //html audio element api
     audio.play();
   };
 
-  //timer not go off when set to 0
   const handleSession = (e) => {
     const inputValue = parseInt(e.target.value);
     //if not a number is false(is a number)
     if (!isNaN(inputValue)) {
       setSessionTime(inputValue);
-      //turn into minutes
-      setTimer(inputValue * 60);
+      setTimer(inputValue * 60);  //turn into minutes
       setTotalTime(breakTime + sessionTime);
     }
   };
@@ -101,7 +96,7 @@ function Pomodoro() {
   }
 
   const handleRounds = (e) => {
-    setRoundsNum(e.target.value)
+    setRoundsNum(e.target.value);
   };
 
   return (
