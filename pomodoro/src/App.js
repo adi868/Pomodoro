@@ -4,33 +4,34 @@ import tomato from "./tomato.gif";
 import tone from "./tone.mp3";
 import start from "./start.mp3";
 import endBreak from "./endBreak.mp3";
+import finished from "./finished.mp3";
 
 function Pomodoro() {
   const [sessionTime, setSessionTime] = useState(25); //set default session time
   const [breakTime, setBreakTime] = useState(5); //set default break time
-  const [roundsNum, setRoundsNum] = useState(4);
-  const [checked, setChecked] = useState(false);
-  let [timer, setTimer] = useState(sessionTime * 60); // Convert session time to milliseconds, which will later be converted back to min & sec
-  let [paused, setPaused] = useState(true);
-  const [isTimerUp, setIsTimerUp] = useState(false);
+  const [roundsNum, setRoundsNum] = useState(4); // input for number of rounds
+  const [checked, setChecked] = useState(false); //checkbox checked or not
+  let [timer, setTimer] = useState(sessionTime * 60); // Convert session time in seconds to milliseconds, which will later be converted back to min & sec
+  let [paused, setPaused] = useState(true); //start stop timer
+  const [isTimerUp, setIsTimerUp] = useState(false); //to display banner
+  const [isSession, setIsSession] = useState(true); //is a session or a break
+  let [roundsCount, setRoundsCount] = useState(0); //count of rounds
+  const [isLongBreak, setIsLongBreak] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
   const [totalTime, setTotalTime] = useState(30);
-  const [isSession, setIsSession]= useState(true);
 
-  //is session, isBreak
   //add which set it is on
-  //for session input fields
 
   //TODO: add music options in the background for studying from the spotify API?
-  //TODO: after working session is over, add timer for 5 minute break session
-  //TODO: ability to change the minutes in both before starting--session and break
   //TODO: auto restart timer? set total study time period--to determine to auto loop or not
 
-  //this
   useEffect(() => {
-    let countdown;  //run if paused is false
+    let countdown; //run if paused is false
     if (!paused) {
       countdown = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+        if (timer !== 0) {
+          setTimer((prevTimer) => prevTimer - 1);
+        }
       }, 1000);
       playSound(start);
     }
@@ -48,33 +49,56 @@ function Pomodoro() {
 
   function resetTimer() {
     setTimer(1500);
+    setBreakTime(5);
     setPaused(true);
     setIsTimerUp(false);
-    setSessionTime(25)
-    setIsSession(true)
+    setSessionTime(25);
+    setIsSession(true);
+    setIsEnd(false);
   }
 
   useEffect(() => {
-    if (timer === 0) {
-      setIsTimerUp(true);
-      setIsSession(prevIsSession => !prevIsSession)
-      if(isSession){
-        playSound(tone);
-      } else{
-        playSound(endBreak)
+    if (timer === 0 && !paused) {
+      //do not continue to run if already done 4 rounds
+      if (roundsCount > 4) {
+        setIsEnd(true);
+        playSound(finished);
+        console.log('HYURRAH')
+        return;
       }
-    } 
+      setIsTimerUp(true);
+      setIsSession((prevIsSession) => !prevIsSession);
+      if (isSession) {
+        playSound(tone);
+      } else {
+        playSound(endBreak);
+        setRoundsCount((prevCount) => prevCount + 1);
+      }
+      checkBanner();
+    }
   }, [timer]);
   //timer as a dependency, event only triggered when the timer value changes. will update isTimerUp when the timer reaches zero
 
-  useEffect(() =>{
-      if(!isSession){
-        setTimer(breakTime * 60)
+  useEffect(() => {
+    if (!isSession) {
+      if(roundsCount === 4){
+        setIsLongBreak(true);
+        setTimer(1200) // 20 min in ms
       } else{
-        setTimer(sessionTime * 60)
+        setTimer(breakTime * 60);
       }
-  }, [isSession, breakTime, sessionTime])
+    } else {
+      setTimer(sessionTime * 60);
+    }
+  }, [isSession, breakTime, sessionTime]);
 
+  function checkBanner() {
+    if (setIsTimerUp) {
+      setTimeout(() => {
+        setIsTimerUp(false);
+      }, 8000);
+    }
+  }
 
   function convertMsToMinutesAndSeconds(ms) {
     const minutes = Math.floor(ms / 60);
@@ -85,8 +109,9 @@ function Pomodoro() {
       seconds.toString().padStart(2, "0")
     );
   }
+
   const playSound = (mp3) => {
-    const audio = new Audio(mp3);  //html audio element api
+    const audio = new Audio(mp3); //html audio element api
     audio.play();
   };
 
@@ -95,7 +120,7 @@ function Pomodoro() {
     //if not a number is false(is a number)
     if (!isNaN(inputValue)) {
       setSessionTime(inputValue);
-      setTimer(inputValue * 60);  //turn into minutes
+      setTimer(inputValue * 60); //turn into minutes
     }
   };
 
@@ -114,20 +139,24 @@ function Pomodoro() {
   const handleRounds = (e) => {
     setRoundsNum(e.target.value);
   };
+  
 
   return (
     <div className="App">
       <div className="pomodoro">
         <div className="pomodoro__container">
           <div className="pomodoro__inner">
-            {isTimerUp && <div className="pomodoro__banner">Timer is up!</div>}
+            {isTimerUp && <div className="pomodoro__banner">{isSession ? "Break" : "Session"} is up!</div>}
+            {isEnd && <div className="pomodoro__finished">All done! Great job!</div>}
             <img
               width="200"
               src={tomato}
               className="pomodoro__tomato"
               alt="tomato"
             />
-            <span className="pomodoro__type">{isSession ? 'Session' : 'Break'}</span>
+            <span className="pomodoro__type">
+            {isLongBreak ? "Long " : ""}{isSession ? "Session" : "Break"}
+            </span>
             <span className="pomodoro__timer">
               {convertMsToMinutesAndSeconds(timer)}
             </span>
@@ -175,9 +204,19 @@ function Pomodoro() {
             </div>
             <div className="pomodoro__rounds">
               <span className="pomodoro__info">
-                The default is for the <a target="_blank" aria-label="Pomodoro - link opens in a new tab" href="https://en.m.wikipedia.org/wiki/Pomodoro_Technique" rel="noreferrer">Pomodoro</a> to run the session 4 times. Each round is separated
-                by the defined break time. After the 4th round, there is a longer, 20 minute
-                break. You can customize the number of rounds to be more or less than the default.
+                The default is for the{" "}
+                <a
+                  target="_blank"
+                  aria-label="Pomodoro - link opens in a new tab"
+                  href="https://en.m.wikipedia.org/wiki/Pomodoro_Technique"
+                  rel="noreferrer"
+                >
+                  Pomodoro
+                </a>{" "}
+                to run 4 sessions. Each round is separated by the
+                defined break time. After the 4th round, there is a longer, 20
+                minute break. You can customize the number of rounds to be more
+                or less than the default.
               </span>
               <div className="pomodoro__rounds__change">
                 <label htmlFor="toggleRounds">Change # of rounds</label>
@@ -205,8 +244,13 @@ function Pomodoro() {
               )}
             </div>
             <div className="pomodoro__total">
-            {/* convert to hours and minutes, value does not change */}
-              <span>Total Time: {convertMsToMinutesAndSeconds(timer)}</span>
+              {/* convert to hours and minutes, value does not change */}
+              <span>
+                Total Time:{" "}
+                {convertMsToMinutesAndSeconds(
+                  sessionTime * 60 + breakTime * 60
+                )}
+              </span>
             </div>
           </div>
         </div>
