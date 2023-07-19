@@ -174,11 +174,8 @@ body {
       flex-direction: column;
       width: 50%;
     }
-
-    &--session {}
-
-    &--break {}
   }
+
 
   &__rounds {
     padding: 30px 17px;
@@ -207,6 +204,43 @@ body {
       label {
         margin-right: 12px;
       }
+
+      span {
+        font-size: 10px;
+        display: block;
+        margin-top: 0;
+        font-family: 'Titillium Web', sans-serif;
+      }
+    }
+  }
+
+  &__data {
+    display: flex;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    min-height: 30px;
+
+    &--set {
+      display: block;
+      margin-top: 10px;
+    }
+
+    &__count {
+      display: block;
+      margin-top: 10px;
+      margin-left: 9px;
+    }
+  }
+
+  &__total {
+    font-family: 'Titillium Web', sans-serif;
+
+    &__num {
+      font-size: 14px;
     }
   }
 }

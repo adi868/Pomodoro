@@ -7,25 +7,26 @@ import endBreak from "./assets/audio/endBreak.mp3";
 import finished from "./assets/audio/finished.mp3";
 
 function Pomodoro() {
+  const [start, setStart] = useState(false); //start stop timer
   const [sessionTime, setSessionTime] = useState(25); //set default session time
   const [breakTime, setBreakTime] = useState(5); //set default break time
-  const [roundsNum, setRoundsNum] = useState(4); // input for number of rounds
-  const [checked, setChecked] = useState(false); //checkbox checked or not
-  const [timer, setTimer] = useState(sessionTime * 60); // convert session time in seconds to milliseconds, which will later be converted back to min & sec
-  const [start, setStart] = useState(false); //start stop timer
-  const [isTimerUp, setIsTimerUp] = useState(false); //to display banner
+  const [timer, setTimer] = useState(sessionTime * 60); // convert session time in seconds to milliseconds
   const [isSession, setIsSession] = useState(true); //is a session or a break
-  const [roundsCount, setRoundsCount] = useState(0); //count of rounds
+  const [roundsCount, setRoundsCount] = useState(1); //count of rounds
+  const [roundsNum, setRoundsNum] = useState(4); // input for number of rounds
+  const [setCount, setSetCount] = useState(1); //count of sets
+  const [running, setRunning] = useState(false); // initial start
+  const [checked, setChecked] = useState(false); //checkbox checked or not
+  const [isTimerUp, setIsTimerUp] = useState(false); //to display banner
   const [isLongBreak, setIsLongBreak] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
-  const [totalTime, setTotalTime] = useState(30);
-
-
-  //TODO: add music options, API?
-  //TODO: rounds functionality, hours and minutes for total time, which set it is on?
+  const checkbox = document.getElementById("toggleRounds");
 
   useEffect(() => {
     if (start && timer > 0) {
+      if (roundsNum < roundsCount) {
+        return; //only run the number of times set by input
+      }
       const countdown = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
@@ -33,46 +34,52 @@ function Pomodoro() {
         clearInterval(countdown);
       };
     }
-  }, [start, timer]); //useEffect with a cleanup function returned = componentWillUnmount. Whenever the start state changes, the effect is triggered
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [start, roundsCount, roundsNum]); //useEffect with a cleanup function returned = componentWillUnmount. Whenever the start state changes, the effect is triggered
 
   useEffect(() => {
     if (timer === 0 && start) {
-      //do not continue to run if already done 4 rounds
-      if (roundsCount > 4) {
-        setIsEnd(true);
-        playSound(finished);
-        console.log("HYURRAH");
-        return;
-      }
       setIsTimerUp(true);
       setIsSession((prevIsSession) => !prevIsSession);
       if (isSession) {
         playSound(tone);
       } else {
-        playSound(endBreak);
         setRoundsCount((prevCount) => prevCount + 1);
+        if (roundsNum < roundsCount + 1) {
+          setIsEnd(true);
+          playSound(finished);
+          return;
+        }
+        playSound(endBreak);
       }
       checkBanner();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer]); //timer dependency, event only triggered when the timer value changes. will update isTimerUp when the timer reaches zero
 
   useEffect(() => {
+    //target this
     if (!isSession) {
       if (roundsCount === 4) {
+        //check for bugs
+        // if(roundsNum < roundsCount){
+        //   setSetCount((prevSet) => prevSet + 1);
+        //   setRoundsCount(1); //set to one after 4 full rounds up
+        // }
         setIsLongBreak(true);
         setTimer(1200); // 20 min in ms
       } else {
         setTimer(breakTime * 60);
-        setIsLongBreak(false)
+        setIsLongBreak(false);
       }
     } else {
       setTimer(sessionTime * 60);
     }
-  }, [isSession, breakTime, sessionTime, roundsCount]);
-  //make sure rounds count work, seems to be ok
+  }, [isSession, roundsCount]); //make sure rounds count work
 
   function togglePlay() {
-    if(!start){
+    setRunning(true);
+    if (!start) {
       playSound(startTone);
     }
     setStart(!start);
@@ -86,6 +93,11 @@ function Pomodoro() {
     setSessionTime(25);
     setIsSession(true);
     setIsEnd(false);
+    setRunning(false);
+    setRoundsCount(1);
+    setRoundsNum(4);
+    setChecked(false);
+    checkbox.checked = false;
   }
 
   function convertMsToMinutesAndSeconds(ms) {
@@ -98,6 +110,23 @@ function Pomodoro() {
     );
   }
 
+  function msToTime(ms) {
+    const hours = Math.floor(ms / (60 * 60));
+    const minutes = Math.floor((ms % (60 * 60)) / 60);
+
+    let formattedTime = "";
+
+    if (hours > 0) {
+      formattedTime += `${hours} ${hours === 1 ? "hour" : "hours"}`;
+    }
+
+    if (minutes > 0) {
+      formattedTime += ` ${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
+    }
+
+    return formattedTime.trim();
+  }
+
   function checkBanner() {
     if (setIsTimerUp) {
       setTimeout(() => {
@@ -107,7 +136,7 @@ function Pomodoro() {
   }
 
   const playSound = (mp3) => {
-    const audio = new Audio(mp3); //html audio element api
+    const audio = new Audio(mp3);
     audio.play();
   };
 
@@ -115,7 +144,7 @@ function Pomodoro() {
     const inputValue = parseInt(e.target.value); //if not a number is false (is a number)
     if (!isNaN(inputValue)) {
       setSessionTime(inputValue);
-      setTimer(inputValue * 60); //turn into minutes
+      setTimer(inputValue * 60); //to minutes
     }
   };
 
@@ -128,10 +157,11 @@ function Pomodoro() {
 
   const handleChange = (e) => {
     setChecked(e.target.checked);
-  }
+  };
 
   const handleRounds = (e) => {
-    setRoundsNum(e.target.value);
+    const inputValue = parseInt(e.target.value);
+    setRoundsNum(inputValue);
   };
 
   return (
@@ -240,16 +270,22 @@ function Pomodoro() {
                     id="rounds"
                     onChange={handleRounds}
                   />
+                  <span>4 rounds = 1 set</span>
                 </div>
               )}
             </div>
+            <div className="pomodoro__data">
+              <span className="pomodoro__data--set">
+                {running && roundsNum > 4 && <span>Set {setCount}</span>}
+              </span>
+              <span className="pomodoro__data__count">
+                {running && <span>Round {roundsCount}</span>}
+              </span>
+            </div>
             <div className="pomodoro__total">
-              {/* convert to hours and minutes, value does not change */}
-              <span>
+              <span className="pomodoro__total__num">
                 Total Time:{" "}
-                {convertMsToMinutesAndSeconds(
-                  sessionTime * 60 + breakTime * 60
-                )}
+                {msToTime((sessionTime * 60 + breakTime * 60) * roundsNum)}
               </span>
             </div>
           </div>
