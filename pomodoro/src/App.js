@@ -321,18 +321,18 @@ function Pomodoro() {
             </div>
           </div>
         </div>
-      <div className="pomodoro__volume">
-              <label htmlFor="volume">Volume</label>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.1"
-                value={volume}
-                id="volume"
-                onChange={handleVolumeChange}
-              />
-            </div>
+        <div className="pomodoro__volume">
+          <label htmlFor="volume">Volume</label>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={volume}
+            id="volume"
+            onChange={handleVolumeChange}
+          />
+        </div>
       </div>
     </div>
   );
