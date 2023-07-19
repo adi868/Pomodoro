@@ -21,13 +21,14 @@ function Pomodoro() {
   const [isTimerUp, setIsTimerUp] = useState(false); //to display banner
   const [isLongBreak, setIsLongBreak] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
+  const [volume, setVolume] = useState(1.0); // state to store the volume level
   const checkbox = document.getElementById("toggleRounds");
 
   useEffect(() => {
     if (start) {
-      console.log('num', roundsNum)
-      console.log('count', roundsCount)
-      console.log('ref', roundsRef)
+      console.log("num", roundsNum);
+      console.log("count", roundsCount);
+      console.log("ref", roundsRef);
       if (roundsNum < roundsCount) {
         return; //only run the number of times set by input
       }
@@ -56,7 +57,7 @@ function Pomodoro() {
         if (roundsNum < roundsCount + 1) {
           setIsEnd(true);
           playSound(finished);
-          setIsLongBreak(false)
+          setIsLongBreak(false);
           return;
         }
         playSound(endBreak);
@@ -68,7 +69,8 @@ function Pomodoro() {
 
   useEffect(() => {
     if (!isSession) {
-      if (roundsCount % 4 === 0) { //check if multiple of four
+      if (roundsCount % 4 === 0) {
+        //check if multiple of four
         setIsLongBreak(true);
         setTimer(1200); // 20 min in ms
       } else {
@@ -79,19 +81,18 @@ function Pomodoro() {
       setTimer(sessionTime * 60);
       setIsLongBreak(false);
     }
-  }, [isSession, roundsNum, roundsCount]); 
-
+  }, [isSession, roundsNum, roundsCount]);
 
   useEffect(() => {
-      // Check if roundsCount is 5, add one to setCount and set roundsCount to 1
-      if (roundsNum < roundsCount) {
-        return; //only run the number of times set by input
-      }
-      if (roundsCount === 5) {
-        setSetCount((prevSet) => prevSet + 1);
-        // Reset roundsRef
-        setRoundsRef(1);
-      }
+    // Check if roundsCount is 5, add one to setCount and set roundsCount to 1
+    if (roundsNum < roundsCount) {
+      return; //only run the number of times set by input
+    }
+    if (roundsCount === 5) {
+      setSetCount((prevSet) => prevSet + 1);
+      // Reset roundsRef
+      setRoundsRef(1);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roundsCount]);
 
@@ -156,6 +157,7 @@ function Pomodoro() {
 
   const playSound = (mp3) => {
     const audio = new Audio(mp3);
+    audio.volume = volume; // Set the volume to the value from the state
     audio.play();
   };
 
@@ -181,6 +183,11 @@ function Pomodoro() {
   const handleRounds = (e) => {
     const inputValue = parseInt(e.target.value);
     setRoundsNum(inputValue);
+  };
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
   };
 
   return (
@@ -298,7 +305,12 @@ function Pomodoro() {
                 {running && roundsNum > 4 && <span>Set {setCount}</span>}
               </span>
               <span className="pomodoro__data__count">
-                {running && <span> Round {roundsNum < roundsRef ? roundsRef - 1 : roundsRef}</span>}
+                {running && (
+                  <span>
+                    {" "}
+                    Round {roundsNum < roundsRef ? roundsRef - 1 : roundsRef}
+                  </span>
+                )}
               </span>
             </div>
             <div className="pomodoro__total">
@@ -309,8 +321,19 @@ function Pomodoro() {
             </div>
           </div>
         </div>
+      <div className="pomodoro__volume">
+              <label htmlFor="volume">Volume</label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                id="volume"
+                onChange={handleVolumeChange}
+              />
+            </div>
       </div>
-      <footer></footer>
     </div>
   );
 }

@@ -243,4 +243,21 @@ body {
       font-size: 14px;
     }
   }
+
+  &__volume {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+
+    label {
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      margin-left: 4px;
+    }
+  }
 }
