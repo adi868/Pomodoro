@@ -1,6 +1,7 @@
 {
   "name": "pomodoro",
   "version": "0.1.0",
+  "author": "Adina Cianciotto",
   "private": true,
   "homepage": "https://adi868.github.io/Pomodoro/",
   "dependencies": {
@@ -20,7 +21,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages main -d build"
+    "deploy": "gh-pages -d build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adi868/Pomodoro.git"
   },
   "eslintConfig": {
     "extends": [
