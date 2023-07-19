@@ -13,6 +13,7 @@ function Pomodoro() {
   const [timer, setTimer] = useState(sessionTime * 60); // convert session time in seconds to milliseconds
   const [isSession, setIsSession] = useState(true); //is a session or a break
   const [roundsCount, setRoundsCount] = useState(1); //count of rounds
+  const [roundsRef, setRoundsRef] = useState(1); //simultaneously track counts addition
   const [roundsNum, setRoundsNum] = useState(4); // input for number of rounds
   const [setCount, setSetCount] = useState(1); //count of sets
   const [running, setRunning] = useState(false); // initial start
@@ -23,19 +24,25 @@ function Pomodoro() {
   const checkbox = document.getElementById("toggleRounds");
 
   useEffect(() => {
-    if (start && timer > 0) {
+    if (start) {
+      console.log('num', roundsNum)
+      console.log('count', roundsCount)
+      console.log('ref', roundsRef)
       if (roundsNum < roundsCount) {
         return; //only run the number of times set by input
       }
       const countdown = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+        setTimer((prevTimer) => {
+          // ensure timer does not go below zero
+          return prevTimer > 0 ? prevTimer - 1 : 0;
+        });
       }, 1000);
       return () => {
         clearInterval(countdown);
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [start, roundsCount, roundsNum]); //useEffect with a cleanup function returned = componentWillUnmount. Whenever the start state changes, the effect is triggered
+  }, [start, roundsNum, roundsCount]); //useEffect with a cleanup function returned = componentWillUnmount. Whenever the start state changes, the effect is triggered
 
   useEffect(() => {
     if (timer === 0 && start) {
@@ -45,9 +52,11 @@ function Pomodoro() {
         playSound(tone);
       } else {
         setRoundsCount((prevCount) => prevCount + 1);
+        setRoundsRef((prevCount) => prevCount + 1);
         if (roundsNum < roundsCount + 1) {
           setIsEnd(true);
           playSound(finished);
+          setIsLongBreak(false)
           return;
         }
         playSound(endBreak);
@@ -58,14 +67,8 @@ function Pomodoro() {
   }, [timer]); //timer dependency, event only triggered when the timer value changes. will update isTimerUp when the timer reaches zero
 
   useEffect(() => {
-    //target this
     if (!isSession) {
-      if (roundsCount === 4) {
-        //check for bugs
-        // if(roundsNum < roundsCount){
-        //   setSetCount((prevSet) => prevSet + 1);
-        //   setRoundsCount(1); //set to one after 4 full rounds up
-        // }
+      if (roundsCount % 4 === 0) { //check if multiple of four
         setIsLongBreak(true);
         setTimer(1200); // 20 min in ms
       } else {
@@ -74,8 +77,23 @@ function Pomodoro() {
       }
     } else {
       setTimer(sessionTime * 60);
+      setIsLongBreak(false);
     }
-  }, [isSession, roundsCount]); //make sure rounds count work
+  }, [isSession, roundsNum, roundsCount]); 
+
+
+  useEffect(() => {
+      // Check if roundsCount is 5, add one to setCount and set roundsCount to 1
+      if (roundsNum < roundsCount) {
+        return; //only run the number of times set by input
+      }
+      if (roundsCount === 5) {
+        setSetCount((prevSet) => prevSet + 1);
+        // Reset roundsRef
+        setRoundsRef(1);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roundsCount]);
 
   function togglePlay() {
     setRunning(true);
@@ -95,6 +113,7 @@ function Pomodoro() {
     setIsEnd(false);
     setRunning(false);
     setRoundsCount(1);
+    setRoundsRef(1);
     setRoundsNum(4);
     setChecked(false);
     checkbox.checked = false;
@@ -279,7 +298,7 @@ function Pomodoro() {
                 {running && roundsNum > 4 && <span>Set {setCount}</span>}
               </span>
               <span className="pomodoro__data__count">
-                {running && <span>Round {roundsCount}</span>}
+                {running && <span> Round {roundsNum < roundsRef ? roundsRef - 1 : roundsRef}</span>}
               </span>
             </div>
             <div className="pomodoro__total">
