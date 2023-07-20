@@ -12,7 +12,7 @@ The Pomodoro Timer Application is a productivity tool designed to help individua
 
 4. **Progress Tracking**: The application tracks and displays the user's progress, showing the number of completed pomodoros. This feature helps users monitor their productivity over time and assess their performance.
 
-5. **Customizable Settings**: Users have the flexibility to customize various settings based on their preferences. They can adjust the duration of work sessions, breaks, and the number of pomodoros.
+5. **Customizable Settings**: Users have the flexibility to customize various settings based on their preferences. They can adjust the duration of work sessions, breaks, the volume of the notifications, and the number of pomodoros.
 
 ## Getting Started
 
