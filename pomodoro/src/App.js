@@ -269,9 +269,10 @@ function Pomodoro() {
                 >
                   Pomodoro
                 </a>{" "}
-                to run 4 rounds. Each focus session is followed by the defined break time. After the 4th focus session, there is a longer, 20 minute break.
-                You can customize the number of rounds to be more or less than
-                the default.
+                to run 4 rounds. Each focus session is followed by the defined
+                break time. After the 4th focus session, there is a longer, 20
+                minute break. You can customize the number of rounds to be more
+                or less than the default.
               </span>
               <div className="pomodoro__rounds__change">
                 <label htmlFor="toggleRounds">Change # of rounds</label>
