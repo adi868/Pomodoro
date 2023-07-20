@@ -22,7 +22,7 @@ To use the Pomodoro Timer Application, follow these steps:
 
 2. **Set Break Duration**: Customize the duration of your breaks. The default duration is 5 minutes.
 
-3. **Start the Timer**: Begin the pomodoro timer to initiate your work session. The application will automatically switch to break mode once the pomodoro is completed. After you have completed the defined number of rounds, the timer will end. Great job!
+3. **Start the Timer**: Begin the pomodoro timer to initiate your work session. The application will automatically switch to break mode once the pomodoro is completed. The timer will end after you have completed the defined number of rounds.
 
    
 #### Link
