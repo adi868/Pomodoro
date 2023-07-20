@@ -84,7 +84,7 @@ function Pomodoro() {
   }, [isSession, roundsNum, roundsCount]);
 
   useEffect(() => {
-    // Check if roundsCount is 5, add one to setCount and set roundsCount to 1
+    // Check if roundsCount is 5, next level up, add one to setCount and set roundsCount to 1
     if (roundsNum < roundsCount) {
       return; //only run the number of times set by input
     }
@@ -269,8 +269,7 @@ function Pomodoro() {
                 >
                   Pomodoro
                 </a>{" "}
-                to run 4 sessions. Each round is separated by the defined break
-                time. After the 4th round, there is a longer, 20 minute break.
+                to run 4 rounds. Each focus session is followed by the defined break time. After the 4th focus session, there is a longer, 20 minute break.
                 You can customize the number of rounds to be more or less than
                 the default.
               </span>
