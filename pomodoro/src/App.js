@@ -7,18 +7,18 @@ import endBreak from "./assets/audio/endBreak.mp3";
 import finished from "./assets/audio/finished.mp3";
 
 function Pomodoro() {
-  const [start, setStart] = useState(false); //start stop timer
-  const [sessionTime, setSessionTime] = useState(25); //set default session time
+  const [start, setStart] = useState(false); // start stop timer
+  const [sessionTime, setSessionTime] = useState(25); // set default session time
   const [breakTime, setBreakTime] = useState(5); //set default break time
   const [timer, setTimer] = useState(sessionTime * 60); // convert session time in seconds to milliseconds
   const [running, setRunning] = useState(false); // initial start
-  const [isSession, setIsSession] = useState(true); //is a session or a break
+  const [isSession, setIsSession] = useState(true); // is a session or a break
   const [roundsNum, setRoundsNum] = useState(4); // input for number of rounds
-  const [roundsCount, setRoundsCount] = useState(1); //count of rounds
-  const [roundsRef, setRoundsRef] = useState(1); //simultaneously track count
-  const [setCount, setSetCount] = useState(1); //count of sets
-  const [checked, setChecked] = useState(false); //checkbox check
-  const [isTimerUp, setIsTimerUp] = useState(false); //to display banner
+  const [roundsCount, setRoundsCount] = useState(1); // count of rounds
+  const [roundsRef, setRoundsRef] = useState(1); // simultaneously track count
+  const [setCount, setSetCount] = useState(1); // count of sets
+  const [checked, setChecked] = useState(false); // checkbox check
+  const [isTimerUp, setIsTimerUp] = useState(false); // to display banner
   const [volume, setVolume] = useState(1.0); // state to store the volume level
   const [isLongBreak, setIsLongBreak] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
@@ -27,7 +27,7 @@ function Pomodoro() {
   useEffect(() => {
     if (start) {
       if (roundsNum < roundsCount) {
-        //don't go over input count
+        // don't go over input count
         return;
       }
       const countdown = setInterval(() => {
@@ -160,9 +160,9 @@ function Pomodoro() {
 
   const handleSession = (e) => {
     const inputValue = parseInt(e.target.value);
-    if (!isNaN(inputValue)) { //is a num
+    if (!isNaN(inputValue)) { // is a num
       setSessionTime(inputValue);
-      setTimer(inputValue * 60); //to minutes
+      setTimer(inputValue * 60); // to minutes
     }
   };
 
