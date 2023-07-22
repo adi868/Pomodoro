@@ -11,30 +11,28 @@ function Pomodoro() {
   const [sessionTime, setSessionTime] = useState(25); //set default session time
   const [breakTime, setBreakTime] = useState(5); //set default break time
   const [timer, setTimer] = useState(sessionTime * 60); // convert session time in seconds to milliseconds
-  const [isSession, setIsSession] = useState(true); //is a session or a break
-  const [roundsCount, setRoundsCount] = useState(1); //count of rounds
-  const [roundsRef, setRoundsRef] = useState(1); //simultaneously track counts addition
-  const [roundsNum, setRoundsNum] = useState(4); // input for number of rounds
-  const [setCount, setSetCount] = useState(1); //count of sets
   const [running, setRunning] = useState(false); // initial start
-  const [checked, setChecked] = useState(false); //checkbox checked or not
+  const [isSession, setIsSession] = useState(true); //is a session or a break
+  const [roundsNum, setRoundsNum] = useState(4); // input for number of rounds
+  const [roundsCount, setRoundsCount] = useState(1); //count of rounds
+  const [roundsRef, setRoundsRef] = useState(1); //simultaneously track count
+  const [setCount, setSetCount] = useState(1); //count of sets
+  const [checked, setChecked] = useState(false); //checkbox check
   const [isTimerUp, setIsTimerUp] = useState(false); //to display banner
+  const [volume, setVolume] = useState(1.0); // state to store the volume level
   const [isLongBreak, setIsLongBreak] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
-  const [volume, setVolume] = useState(1.0); // state to store the volume level
   const checkbox = document.getElementById("toggleRounds");
 
   useEffect(() => {
     if (start) {
-      console.log("num", roundsNum);
-      console.log("count", roundsCount);
-      console.log("ref", roundsRef);
       if (roundsNum < roundsCount) {
-        return; //only run the number of times set by input
+        //don't go over input count
+        return;
       }
       const countdown = setInterval(() => {
         setTimer((prevTimer) => {
-          // ensure timer does not go below zero
+          // don't go below zero
           return prevTimer > 0 ? prevTimer - 1 : 0;
         });
       }, 1000);
@@ -43,7 +41,7 @@ function Pomodoro() {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [start, roundsNum, roundsCount]); //useEffect with a cleanup function returned = componentWillUnmount. Whenever the start state changes, the effect is triggered
+  }, [start, roundsNum, roundsCount]);
 
   useEffect(() => {
     if (timer === 0 && start) {
@@ -65,12 +63,12 @@ function Pomodoro() {
       checkBanner();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timer]); //timer dependency, event only triggered when the timer value changes. will update isTimerUp when the timer reaches zero
+  }, [timer]);
 
   useEffect(() => {
     if (!isSession) {
       if (roundsCount % 4 === 0) {
-        //check if multiple of four
+        //if multiple of four
         setIsLongBreak(true);
         setTimer(1200); // 20 min in ms
       } else {
@@ -84,13 +82,12 @@ function Pomodoro() {
   }, [isSession, roundsNum, roundsCount]);
 
   useEffect(() => {
-    // Check if roundsCount is 5, next level up, add one to setCount and set roundsCount to 1
+    // roundsCount is 5, next level up, add one to setCount and set roundsRef to 1
     if (roundsNum < roundsCount) {
-      return; //only run the number of times set by input
+      return;
     }
     if (roundsCount === 5) {
       setSetCount((prevSet) => prevSet + 1);
-      // Reset roundsRef
       setRoundsRef(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,13 +154,13 @@ function Pomodoro() {
 
   const playSound = (mp3) => {
     const audio = new Audio(mp3);
-    audio.volume = volume; // Set the volume to the value from the state
+    audio.volume = volume; // adjust value from state
     audio.play();
   };
 
   const handleSession = (e) => {
-    const inputValue = parseInt(e.target.value); //if not a number is false (is a number)
-    if (!isNaN(inputValue)) {
+    const inputValue = parseInt(e.target.value);
+    if (!isNaN(inputValue)) { //is a num
       setSessionTime(inputValue);
       setTimer(inputValue * 60); //to minutes
     }
