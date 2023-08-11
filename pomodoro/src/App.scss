@@ -70,8 +70,9 @@ body {
     padding-bottom: 40px;
     max-width: 400px;
     margin-top: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
     border-radius: 10px;
+    width: 88%;
   }
 
   &__banner {
@@ -252,12 +253,30 @@ body {
     display: flex;
     flex-direction: column;
     padding: 15px;
+    z-index: 10;
+
+    @media (max-width: 400px) {
+      top: 0;
+      bottom: auto;
+    }
+
+    input {
+      max-width: 110px;
+    }
 
     label {
       font-size: 12px;
       text-transform: uppercase;
       margin-bottom: 10px;
       margin-left: 4px;
+      color: white;
+      background: #0260cc;
+      padding-left: 12px;
+      padding-right: 14px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      border-radius: 10px;
+      width: fit-content;
     }
   }
 }

@@ -19,7 +19,7 @@ function Pomodoro() {
   const [setCount, setSetCount] = useState(1); // count of sets
   const [checked, setChecked] = useState(false); // checkbox check
   const [isTimerUp, setIsTimerUp] = useState(false); // to display banner
-  const [volume, setVolume] = useState(1.0); // state to store the volume level
+  const [volume, setVolume] = useState(0.5); // state to store the volume level
   const [isLongBreak, setIsLongBreak] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const checkbox = document.getElementById("toggleRounds");
@@ -317,7 +317,6 @@ function Pomodoro() {
               </span>
             </div>
           </div>
-        </div>
         <div className="pomodoro__volume">
           <label htmlFor="volume">Volume</label>
           <input
@@ -327,8 +326,10 @@ function Pomodoro() {
             step="0.1"
             value={volume}
             id="volume"
+            name="volume"
             onChange={handleVolumeChange}
           />
+        </div>
         </div>
       </div>
     </div>
