@@ -6,7 +6,7 @@ The Pomodoro Timer Application is a productivity tool designed to help individua
 
 1. **Pomodoro Timer**: The application provides a timer that allows users to set the duration for their work sessions, typically referred to as "pomodoros." Users can customize the length of their work sessions to suit their preferences and work style.
 
-2. **Break Timer**: After each completed pomodoro, the application automatically initiates a short break. Users can customize the duration of their breaks to relax, refresh, and rejuvenate before the next work session. On every 4th round, a longer, 20 minute break session is activated.
+2. **Break Timer**: After each completed pomodoro, the application automatically initiates a short break. Users can customize the duration of their breaks to relax, refresh, and rejuvenate before the next work session. On every 4th round, a longer, 20-minute break session is activated.
 
 3. **Notifications**: The application notifies users when a work session or break session ends. These notifications ensure that users stay on track and can switch between work and break sessions seamlessly.
 
@@ -32,3 +32,4 @@ To use the Pomodoro Timer Application, follow these steps:
 ---
 
 © Adina Cianciotto adi868
+
