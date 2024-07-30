@@ -31,5 +31,5 @@ To use the Pomodoro Timer Application, follow these steps:
 
 ---
 
-© Adina Cianciotto adi868
+© adi868
 
